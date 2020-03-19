@@ -11,11 +11,11 @@ let issues = {
 // POST - 用于添加数据。
 // DELETE - 用于删除数据。
 exports.issues_get = async (ctx) => {
-    const issues = await IssueModel.find();
-    ctx.success(issues)
+    await IssueModel.find()
 };
 
 exports.issues_get_search = async (ctx) => {
+    ctx.validateQuery({key: {required: true}});
     const {key} = ctx.request.query;
 
     // 模糊匹配
@@ -30,6 +30,7 @@ exports.issues_get_search = async (ctx) => {
 };
 
 exports.issue_get_by_id = async (ctx) => {
+    ctx.validateQuery({id: {required: true}});
     const {id} = ctx.request.query;
     const issue = await IssueModel.findOne({_id: id});
     ctx.success(issue);
@@ -42,6 +43,7 @@ exports.issue_post = async (ctx) => {
 };
 
 exports.issue_delete_by_id = async (ctx) => {
+    ctx.validateQuery({id: {required: true}});
     const {id} = ctx.request.body;
     const issue = await IssueModel.deleteOne({_id: id});
     ctx.success(issue);

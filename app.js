@@ -3,7 +3,7 @@ const path = require('path');
 const Router = require('koa-router');
 const mongoose = require('mongoose');
 const bodyParser = require('koa-body');
-const responseData = require('./utils/responseData');
+const {responseData, validateQuery, errorHandler} = require('./utils/responseData');
 
 // 初始化model
 require('./modles/Issue');
@@ -26,8 +26,11 @@ mongoose.connect(`mongodb://${config.host}/${config.dbName}`, {
 const db = mongoose.connection;
 db.on('error', console.log.bind(console, 'MongoDB: 连接错误'));
 
+
+app.use(errorHandler);
 // 响应数据格式化中间件
-app.use(responseData());
+app.use(responseData);
+app.use(validateQuery);
 
 // 响应时间
 app.use(async (ctx, next) => {
