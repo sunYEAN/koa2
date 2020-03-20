@@ -11,7 +11,7 @@ let issues = {
 // POST - 用于添加数据。
 // DELETE - 用于删除数据。
 exports.issues_get = async (ctx) => {
-    await IssueModel.find()
+    ctx.success(await IssueModel.find());
 };
 
 exports.issues_get_search = async (ctx) => {
