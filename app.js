@@ -6,6 +6,7 @@ const bodyParser = require('koa-body');
 const {responseData, validateQuery, errorHandler} = require('./utils/responseData');
 
 // 初始化model
+require('./modles/tag');
 require('./modles/Issue');
 require('./modles/Category');
 

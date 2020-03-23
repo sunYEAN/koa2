@@ -30,6 +30,10 @@ exports.issues_get = async (ctx) => {
                 path: 'cate',
                 select: 'name -_id'
             })
+            .populate({
+                path: 'tags',
+                select: 'name -_id'
+            })
             .skip((page - 1) * page_size)
             .limit(page_size)
             .sort({'_id': -1});
@@ -41,26 +45,9 @@ exports.issues_get = async (ctx) => {
 
 exports.issue_by_key = async (ctx) => {
     // ctx.validateQuery({key: {required: true}});
-    let result,
-        {key, id} = ctx.request.query;
-
-    console.log(key, id);
-
+    let {key, id} = ctx.request.query;
     if (!key && !id) return ctx.fail('缺少参数');
-
-    if (id) {
-        result = await IssueModel.findOne({_id: id});
-    } else {
-        // 模糊匹配
-        result = await IssueModel.find({
-            $or: [
-                {title: {$regex: key, $options: '$i'}},
-                {content: {$regex: key, $options: '$i'}},
-                {desc: {$regex: key, $options: '$i'}}
-            ]
-        });
-    }
-    ctx.success(result);
+    ctx.success(await IssueModel.findByKey({id, key}));
 };
 
 exports.issue_get_by_id = async (ctx) => {
@@ -72,10 +59,10 @@ exports.issue_get_by_id = async (ctx) => {
 
 exports.issue_post = async (ctx) => {
     const params = ctx.request.body;
-    const issue = await new IssueModel(params).save();
-    if (issue) {
-        _ISSUES = {};
-    }
+    const issue = new IssueModel(params).save();
+    // if (issue) {
+    //     _ISSUES = {};
+    // }
     ctx.success(issue);
 };
 
