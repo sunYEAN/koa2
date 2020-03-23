@@ -53,13 +53,13 @@ exports.errorHandler = async function (ctx, next) {
     try {
         await next();
     } catch (err) {
-        ctx.fail(err);
+        ctx.fail({data: err});
     }
 };
 
 exports.validateQuery = async function (ctx, next) {
-    ctx.validateQuery = function (params) {
-        const query = ctx.request.query;
+    ctx.validateQuery = function (params, type) {
+        const query = type === 'params' ? ctx.params : ctx.request.query;
         const status = Object.keys(params).every(key => {
             const value = query[key];
             const validate = new Validate(value);

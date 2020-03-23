@@ -12,7 +12,9 @@
     "bluebird": "^3.7.2",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
+    "koa-json": "^2.0.2",
     "koa-mongoose": "^2.0.0",
+    "koa-redis": "^4.0.1",
     "koa-router": "^8.0.8",
     "mongoose": "^5.9.5"
   }

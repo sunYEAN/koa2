@@ -7,6 +7,7 @@ const {responseData, validateQuery, errorHandler} = require('./utils/responseDat
 
 // 初始化model
 require('./modles/Issue');
+require('./modles/Category');
 
 const app = new Koa();
 
@@ -26,6 +27,8 @@ mongoose.connect(`mongodb://${config.host}/${config.dbName}`, {
 const db = mongoose.connection;
 db.on('error', console.log.bind(console, 'MongoDB: 连接错误'));
 
+
+app.keys = [];
 
 app.use(errorHandler);
 // 响应数据格式化中间件
@@ -55,7 +58,6 @@ app.use(bodyParser({
         }
     }
 }));
-
 
 let router = new Router();
 
