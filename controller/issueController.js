@@ -47,22 +47,27 @@ exports.issue_by_key = async (ctx) => {
     // ctx.validateQuery({key: {required: true}});
     let {key, id} = ctx.request.query;
     if (!key && !id) return ctx.fail('缺少参数');
-    ctx.success(await IssueModel.findByKey({id, key}));
+    ctx.success(
+        await IssueModel.findByKey({id, key})
+            .populate({
+                path: 'cate',
+                select: 'name -_id'
+            })
+            .populate({
+                    path: 'tags',
+                    select: 'name -_id'
+                }
+            )
+    );
 };
 
-exports.issue_get_by_id = async (ctx) => {
-    ctx.validateQuery({id: {required: true}}, 'params');
-    const {id} = ctx.params;
-    const issue = await IssueModel.findOne({_id: id});
-    ctx.success(issue);
-};
 
 exports.issue_post = async (ctx) => {
     const params = ctx.request.body;
-    const issue = new IssueModel(params).save();
-    // if (issue) {
-    //     _ISSUES = {};
-    // }
+    const issue = await new IssueModel(params).save();
+    if (issue) {
+        _ISSUES = {};
+    }
     ctx.success(issue);
 };
 
